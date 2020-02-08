@@ -1,0 +1,53 @@
+#ZADANIE 1
+#Polecenie 1
+
+setwd("D:/Users/Piotr/Documents/PRACA/data_science/enigma_pattern")
+test_set <- read.csv("test.csv", header = TRUE)
+summary(test_set)
+test_set
+
+#Polecenie 2
+
+install.packages("lubridate")
+library(lubridate)
+
+print(sum(dmy(test_set$data_urodzenia)>as.Date('1999-12-31')))
+
+#Polecenie 3
+
+install.packages("stringr")
+library(stringr)
+
+print(unique(test_set[str_sub(test_set$imie, -1)=="a", 1]))
+
+
+#ZADANIE 2
+
+install.packages("RSQLite")
+install.packages("FlickrAPI")
+library(RSQLite)
+library(FlickrAPI)
+
+fotobaza <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+
+#FlickrAPI dla R jest wybitnie ograniczona, więc skupiłem się na pobraniu zdjęć wybranego użytkownika i zapisaniu ich q bazie SQLite
+
+zdjecia<- getPhotos("d10b340b5ef4ea78fceeef5580207b3e", "141696738@N08")
+
+dbWriteTable(fotobaza, "zdjecia", zdjecia)
+dbListFields(fotobaza, "zdjecia")
+fotobaza[1]
+
+dbReadTable(fotobaza, "zdjecia")
+
+
+#Tutaj rozpocząłem tworzenie CNN rozpoznającego czy obrazek jest czerwony
+
+install.packages("keras")
+install.packages("OpenImageR")
+install.packages("pbapply")
+library(keras)
+library(OpenImageR)
+library(stringr)
+library(pbapply)
